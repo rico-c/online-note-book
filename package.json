@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "upload": "cd dist; git init; git remote remove origin; git remote add origin git@github.com/RicardoCao-Biker/online-note-book.git;; git add . ; git commit -am \"modify\";git push -f origin master && exit 0"
   },
   "dependencies": {
     "vue": "^2.5.2",
@@ -30,6 +31,7 @@
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.6.1",
     "html-webpack-plugin": "^2.30.1",
+    "less-loader": "^4.1.0",
     "node-notifier": "^5.1.2",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
     "ora": "^1.2.0",
