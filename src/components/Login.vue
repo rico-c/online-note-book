@@ -6,23 +6,23 @@
           <div class="main"></div>
           <div class="form">
           	<h3 @click="showRegister">创建账户</h3>  
-            <transition name="slide">
-              <div v-bind:class="{show: isShowRegister}" class="register">
-                <input type="text" v-model="register.username" placeholder="用户名">
-                <input type="password" v-model="register.password" @keyup.enter="onRegister" placeholder="密码">
-                <p v-bind:class="{error: register.isError}"> {{register.notice}}</p>
-                <div class="button" @click="onRegister">创建账号</div>
-              </div>
-            </transition>            
+            <!-- <transition name="slide"> -->
+            <div v-bind:class="{show: isShowRegister}" class="register">
+              <input type="text" v-model="register.username" placeholder="用户名">
+              <input type="password" v-model="register.password" @keyup.enter="onRegister" placeholder="密码">
+              <p v-bind:class="{error: register.isError}"> {{register.notice}}</p>
+              <div class="button" @click="onRegister">创建账号</div>
+            </div>
+            <!-- </transition>             -->
             <h3 @click="showLogin">登录</h3>
-            <transition name="slide">
-              <div v-bind:class="{show: isShowLogin}" class="login">
-                <input type="text" v-model="login.username" placeholder="输入用户名">
-                <input type="password" v-model="login.password" @keyup.enter="onLogin"  placeholder="密码">
-                <p v-bind:class="{error: login.isError}"> {{login.notice}}</p>
-                <div class="button" @click="onLogin"> 登录</div>
-              </div>
-            </transition>            
+            <!-- <transition name="slide"> -->
+            <div v-bind:class="{show: isShowLogin}" class="login">
+              <input type="text" v-model="login.username" placeholder="输入用户名">
+              <input type="password" v-model="login.password" @keyup.enter="onLogin"  placeholder="密码">
+              <p v-bind:class="{error: login.isError}"> {{login.notice}}</p>
+              <div class="button" @click="onLogin"> 登录</div>
+            </div>
+            <!-- </transition>             -->
           </div>
         </div>
       </div>
@@ -31,6 +31,12 @@
    </div>
 </template>
 <script>
+  import Auth from '@/apis/auth'
+
+  Auth.getInfo().then(
+    data=>{
+      console.log(data)
+    })
 
   export default {
     data(){
@@ -73,7 +79,19 @@
         }
         this.register.isError = false
         this.register.notice = ''
+
+         // request('/auth/register','POST',{username:this.register.username,password:this.register.password}).then(data=>{
+         //    console.log(data)
+         //  })
+         
         console.log(`start register..., username: ${this.register.username} , password: ${this.register.password}`)
+
+        Auth.register({
+          username:this.register.username,
+          password:this.register.password
+        }).then(data=>{
+          console.log(data)
+        })
       },
       onLogin(){
         if(!/^[\w\u4e00-\u9fa5]{3,15}$/.test(this.login.username)){
@@ -88,7 +106,17 @@
         }
         this.login.isError = false
         this.login.notice = ''
-        
+
+          // request('/auth/login','POST',{username:this.login.username,password:this.login.password}).then(data=>{
+          //   console.log(data)
+          // })
+        Auth.login({
+          username:this.login.username,
+          password:this.login.password
+        }).then(data=>{
+          console.log(data)
+        })
+
         console.log(`start login..., username: ${this.login.username} , password: ${this.login.password}`)      
       }
     }
@@ -128,6 +156,7 @@
 		background:url(http://39.107.107.62/vuenote/vuenote1.jpg) center center no-repeat;
 		background-size: auto 100%; 
 	}
+
 	.form {
 		width: 270px;
 		border-left: 1px solid #ccc;
@@ -135,7 +164,7 @@
 
 		h3 {
 		  padding: 10px 20px;
-    	  margin-top: -1px;		  
+    	margin-top: -1px;		  
 		  font-weight: normal;
 		  font-size: 16px;
 		  border-top: 1px solid #eee;
@@ -159,17 +188,17 @@
 	}
 
 	.login,.register {
-      padding: 0px 20px;
-	  border-top: 1px solid #eee;
+       padding: 0px 20px;
+	     border-top: 1px solid #eee;
        height: 0;
        overflow: hidden;
-       transition: height .4s;
+       transition: height 1s;
 
        &.show {
         height: 193px;
        }
 
-	  input {
+	   input {
 	    display: block;
 	    width: 100%;
 	    height: 35px;
