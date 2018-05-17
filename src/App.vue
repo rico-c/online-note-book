@@ -60,6 +60,6 @@ ul, li{
   align-items: stretch;
  }
  .iconfont{
-  font-size: 20px !important;
+  font-size: 20px ;
  }
 </style>

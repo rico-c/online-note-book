@@ -6,7 +6,7 @@ const URL = {
 	LOGOUT:'/auth/logout',
 	GET_INFO:'/auth'
 }
-
+// 将完整的request请求封装好并依此命名为各个方法
 export default{
 	register({username,password}){
 		return request(URL.REGISTER,'POST',{username,password})

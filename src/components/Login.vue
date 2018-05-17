@@ -32,12 +32,7 @@
 </template>
 <script>
   import Auth from '@/apis/auth'
-
-  Auth.getInfo().then(
-    data=>{
-      console.log(data)
-    })
-
+  import Bus from '@/helpers/bus'
   export default {
     data(){
       return {
@@ -58,6 +53,7 @@
       }
     },   
     methods: {
+      // this为全局对象
       showLogin(){
         this.isShowLogin = true
         this.isShowRegister = false
@@ -79,10 +75,6 @@
         }
         this.register.isError = false
         this.register.notice = ''
-
-         // request('/auth/register','POST',{username:this.register.username,password:this.register.password}).then(data=>{
-         //    console.log(data)
-         //  })
          
         console.log(`start register..., username: ${this.register.username} , password: ${this.register.password}`)
 
@@ -90,7 +82,15 @@
           username:this.register.username,
           password:this.register.password
         }).then(data=>{
-          console.log(data)
+          this.register.isError = false
+          this.register.notice = ''
+          Bus.$emit('userInfo',{username:this.register.username})
+          this.$router.push({path:'notebooks'})
+          .catch(data => {
+          this.register.isError = true
+          this.register.notice = data.msg
+
+        })
         })
       },
       onLogin(){
@@ -104,17 +104,19 @@
           this.login.notice = '密码长度为6~16个字符'
           return
         }
-        this.login.isError = false
-        this.login.notice = ''
-
-          // request('/auth/login','POST',{username:this.login.username,password:this.login.password}).then(data=>{
-          //   console.log(data)
-          // })
+        
+        // 通过Auth.fun()调用Auth中的方法
         Auth.login({
           username:this.login.username,
           password:this.login.password
         }).then(data=>{
-          console.log(data)
+          this.login.isError = false
+          this.login.notice = ''
+          Bus.$emit('userInfo',{username:this.login.username})
+          this.$router.push({path:'notebooks'})
+        }).catch(data => {
+          this.login.isError = true
+          this.login.notice = data.msg
         })
 
         console.log(`start login..., username: ${this.login.username} , password: ${this.login.password}`)      
