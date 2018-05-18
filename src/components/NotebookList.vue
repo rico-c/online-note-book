@@ -13,7 +13,7 @@
 							<span>{{notebook.noteCounts}}</span>
 							<span class="action" @click.stop.prevent="onEdit(notebook)">编辑</span>
 							<span class="action" @click.stop.prevent="onDelete(notebook)">删除</span>
-							<span class="date">3天前</span>
+							<span class="date">{{notebook.friendlyCreatedAt}}</span>
 						</div>
 					</router-link>
 				</div>
@@ -24,6 +24,7 @@
 <script type="text/javascript">
 	import Auth from '@/apis/auth'
 	import Notebooks from '@/apis/notebooks'
+	import {friendlyDate} from '@/helpers/util'
 
 	export default{
 		data() {
@@ -54,6 +55,8 @@
 				Notebooks.addNoteBook({title})
 					.then(res=>{
 						console.log(res)
+						// 添加后实时在页面上显示而不需刷新
+						res.data.friendlyCreatedAt = friendlyDate(res.data.createdAt)
 						alert(res.msg)
 						this.notebooks.unshift(res.data)
 					})
