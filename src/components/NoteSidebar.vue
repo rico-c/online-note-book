@@ -1,6 +1,6 @@
 <template>
 	<div class="note-sidebar">
-		<span class="btn add-note">添加笔记</span>
+		<span class="btn add-note" @click="addNote">添加笔记</span>
 		<el-dropdown class="notebook-title" @command="handleCommand" placement="bottom">
 			<span class="el-dropdown-link">
 				{{curBook.title}}<i class="iconfont icon-down"></i>
@@ -19,7 +19,7 @@
 		<ul class="notes">
 			<li v-for="note in notes">
 				<router-link :to="`/note?noteId=${note.id}&notebookId=${curBook.id}`">
-					<span class="date">{{note.updateAtFriendly}}</span>
+					<span class="date">{{note.updatedAtFriendly}}</span>
 					<span class="title">{{note.title}}</span>
 				</router-link>
 			</li>
@@ -29,6 +29,7 @@
 <script type="text/javascript">
 	import Notebooks from '@/apis/notebooks'
 	import Notes from '@/apis/notes'
+	import Bus from '@/helpers/bus'
 
 	export default{
 		created(){
@@ -41,8 +42,13 @@
 					return Notes.getAll({notebookId: this.curBook.id})
 				}).then(res=>{
 					this.notes = res.data
+					this.$emit('update:notes',this.notes)
+					Bus.$emit('update:notes',this.notes)
 				})
 		},
+
+		props:['curNote'],
+
 		data(){
 			return{
 				notebooks:[],
@@ -60,14 +66,29 @@
 				Notes.getAll({notebookId})
 					.then(res =>{
 						this.notes = res.data
+						this.$emit('update:notes',this.notes)
+					})
+			},
+			addNote(){
+				Notes.addNote({notebookId:this.curBook.id})
+					.then(res=>{
+						console.log(res)
+						this.notes.unshift(res.data)	
 					})
 			}
 		}
 	}
 </script>
 <style type="text/css">
+	.notes{
+		height:100%;
+	}
+	.date,.title{
+		width:150px;
+		height:30px;
+	}
 	.note-sidebar{
-		width:24%;
+		width:300px;
 		background-color:#F8F6F8;
 		text-align: center;
 		border-right:0.5px solid grey;
@@ -75,15 +96,14 @@
 	}
 	.add-note{
 		position:absolute;
-		right:0;
-		top:0;
-		margin:10px 5px;
+		right:10px;
+		top:15px;
 		cursor:pointer;
 	}
 	.notebook-title{
 		width:100%;
-		height:40px;
-		line-height: 40px;
+		height:50px;
+		line-height: 50px;
 
 	}
 	.el-dropdown-link{
@@ -93,7 +113,7 @@
 	.menu{
 		width:100%;
 		background-color:#EEEDEF;
-		height:20px;
+		height:30px;
 	}
 	.menu div{
 		display: inline-block;
@@ -101,7 +121,8 @@
 		float:left;
 		border:0.5px solid grey;
 		border-right:0px solid grey;
-
+		height:30px;
+		line-height: 30px;
 	}
 	.date,.title{
 		line-height: 30px;

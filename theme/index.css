@@ -6655,7 +6655,7 @@
 
 .el-dropdown {
   display: inline-block;
-  position: relative;
+ /* position: relative;*/
   color: #606266;
   font-size: 14px; }
   .el-dropdown .el-button-group {
