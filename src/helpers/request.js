@@ -1,10 +1,11 @@
 // request 用来完成ajax功能，封装了promise/axios
 import axios from 'axios'
 import baseURLConfig from './config-baseURL'
+import {Message} from 'element-ui'
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 axios.defaults.baseURL = baseURLConfig.baseURL
-// 是否使用跨域请求
+// 是否带cookie
 axios.defaults.withCredentials = true
 
 export default function request(url,type = 'GET',data = {}){
@@ -28,9 +29,18 @@ export default function request(url,type = 'GET',data = {}){
 			if(res.status===200){
 				resolve(res.data)
 			}else{
+				Message.error(res.data.msg)
+				// Message({
+				// 	type:'error',
+				// 	message:res.data.msg
+				// })
 				reject(res.data)
 			}
 		}).catch(err=>{
+			Message({
+					type:'error',
+					message:'网络异常'
+				})
 			reject({msg:'网络异常'})
 		})
 	})
