@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-  <sidebar></sidebar>
-  <router-view></router-view>
+    <sidebar></sidebar>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -16,6 +16,7 @@ export default {
 </script>
 
 <style>
+/*引入阿里iconfont库*/
 @import '//at.alicdn.com/t/font_496303_kqrjhri8l25d0a4i.css';
 * {
   box-sizing: border-box;
@@ -57,6 +58,7 @@ ul, li{
 
 #app {
   display: flex;
+  /*flex子项在flex容器的当前行的侧轴（纵轴）方向上的对齐方式，默认值为stretch,元素被拉伸以适应容器。*/
   align-items: stretch;
  }
  .iconfont{

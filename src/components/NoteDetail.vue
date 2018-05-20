@@ -25,6 +25,7 @@
 </template>
 <script type="text/javascript">
 import Auth from '@/apis/auth'
+// NoteSidebar是NoteDetail的子组件，在这里注册并引入、使用
 import NoteSidebar from '@/components/NoteSidebar'
 import Bus from '@/helpers/bus'
 import _ from 'lodash'
@@ -48,6 +49,7 @@ import Notes from '@/apis/notes'
 						this.$router.push({path:'/login'})
 					}
 				})
+			// ？？？
 			Bus.$once('update:notes',val=>{
 				this.curNote = val.find(note=>note.id == this.$route.query.noteId)||{}
 			})
@@ -69,7 +71,9 @@ import Notes from '@/apis/notes'
 				Notes.deleteNote({noteId:this.curNote.id})
 					.then(data=>{
 						this.$message(data.msg)
+						// 实时显示
 						this.notes.splice(this.notes.indexOf(this.curNote),1)
+						// 路由退回到选择界面
 						this.$router.replace({path:'/note'})
 					})
 			}

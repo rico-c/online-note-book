@@ -1,7 +1,6 @@
- import request from '@/helpers/request'
-// 引入函数的方法
+import request from '@/helpers/request'
 import {friendlyDate} from '@/helpers/util'
-
+// 已经在baseURL.js中写好了基础URL这里只需要写后面的URL
 const URL = {
 	GET: '/notes/from/:notebookId',
 	ADD: '/notes/to/:notebookId',
@@ -11,16 +10,18 @@ const URL = {
 
 export default{
 	getAll({notebookId}){
-		// return request(URL.GET)
 		return new Promise((resolve,reject)=>{
 			request(URL.GET.replace(':notebookId',notebookId))
 				.then(res=>{
+					// map会返回一个新数组，不对原数组产生影响,foreach不会产生新数组，foreach返回undefined
 					res.notes = res.data.map(note =>{
 						note.createdAtFriendly = friendlyDate(note.createdAt)
 						note.updatedAtFriendly = friendlyDate(note.updatedAt)
+						// 返回带有友好日期的笔记本的笔记对象
 						return note
 					}).sort((note1,note2)=>{
-						return note1.updateAt < note2.updateAt
+						// 根据笔记的更新时间排序
+						return note1.updatedAt < note2.updatedAt
 					})
 					resolve(res)
 				}).catch(err=>{

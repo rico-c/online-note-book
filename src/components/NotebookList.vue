@@ -34,12 +34,14 @@
 			}
 		},
 		created(){
+			// 如果没登录则路由到登录页面
 			Auth.getInfo()
 				.then(res=>{
 					if(!res.isLogin){
 						this.$router.push({path:'/login'})
 					}
 				})
+			// 获取笔记本列表并赋值给notebooks数组
 			Notebooks.getAll()
 				.then(res=>{
 					this.notebooks = res.data
@@ -53,15 +55,15 @@
 		          cancelButtonText: '取消',
 		          inputPattern: /^.{1,30}$/,
 		          inputErrorMessage: '标题不能为空，且不超过30个字符'
-		        }).then(({ value }) => {
+		        }).then(({value}) => {
+		        	// 输入标题后,进入该then的value,并调用notebooks的添加笔记本API
 		        	return Notebooks.addNoteBook({ title:value })
 		        }).then(res=>{
 						console.log(res)
-						// 添加后实时在页面上显示而不需刷新
+						// 添加后实时在页面上显示而不需刷新，将友好时间添加到res后再进行页面的显示步骤
 						res.data.friendlyCreatedAt = friendlyDate(res.data.createdAt)
 						this.notebooks.unshift(res.data)
 						this.$message.success(res.msg)
-				// 此处的catch对象为addNoteBook
 		        })
 			},
 			onEdit(notebook){
@@ -73,10 +75,11 @@
 		          inputPattern: /^.{1,30}$/,
 		          inputValue:notebook.title,
 		          inputErrorMessage: '标题不能为空，且不超过30个字符'
-		        }).then(({ value }) => {
+		        }).then(({value}) => {
 		        	title = value
-		        	return Notebooks.updateNotebook(notebook.id,{ title })
+		        	return Notebooks.updateNotebook(notebook.id,{title})
 		        }).then(res=>{
+		        	// 实时将修改过的数据显示出来
 					notebook.title = title
 					this.$message.success(res.msg)	 
 		        })
@@ -90,6 +93,7 @@
 		        }).then(()=>{
 		        	return Notebooks.deleteNotebook(notebook.id)
 		        }).then((res)=>{
+		        	// 实时将修改过的数据显示出来
 		        	this.notebooks.splice(this.notebooks.indexOf(notebook),1)
 		        	this.$message.success(res.msg)
 		        })

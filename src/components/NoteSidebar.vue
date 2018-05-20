@@ -1,6 +1,8 @@
 <template>
 	<div class="note-sidebar">
+
 		<span class="btn add-note" @click="addNote">添加笔记</span>
+		<!-- elementUI组件 -->
 		<el-dropdown class="notebook-title" @command="handleCommand" placement="bottom">
 			<span class="el-dropdown-link">
 				{{curBook.title}}<i class="iconfont icon-down"></i>
@@ -12,12 +14,15 @@
 				<el-dropdown-item command="trash">回收站</el-dropdown-item>
 			</el-dropdown-menu>
 		</el-dropdown>
+
 		<div class="menu">
 			<div>更新时间</div>
 			<div>标题</div>
 		</div>
+
 		<ul class="notes">
 			<li v-for="note in notes">
+			<!-- `${}`用法 -->
 				<router-link :to="`/note?noteId=${note.id}&notebookId=${curBook.id}`">
 					<span class="date">{{note.updatedAtFriendly}}</span>
 					<span class="title">{{note.title}}</span>
@@ -73,6 +78,7 @@
 				Notes.addNote({notebookId:this.curBook.id})
 					.then(res=>{
 						console.log(res)
+						// 向数组的开头添加一个或更多元素，并返回新的长度。
 						this.notes.unshift(res.data)	
 					})
 			}
